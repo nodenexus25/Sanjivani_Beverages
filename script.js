@@ -1,5 +1,66 @@
 document.documentElement.classList.add("js-enabled");
 
+// #region debug-point A-C:site-runtime-reporting
+const __siteDebugConfig = {
+  sessionId: "site-deployment-readiness",
+  runId: "post-fix",
+  url: "http://127.0.0.1:7777/event"
+};
+
+function __siteDebugReport(hypothesisId, msg, data = {}) {
+  fetch(__siteDebugConfig.url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      sessionId: __siteDebugConfig.sessionId,
+      runId: __siteDebugConfig.runId,
+      hypothesisId,
+      location: "script.js",
+      msg,
+      data,
+      ts: Date.now()
+    })
+  }).catch(() => {});
+}
+
+window.addEventListener("error", (event) => {
+  if (event.target instanceof HTMLImageElement) {
+    __siteDebugReport("A", "[DEBUG] image-load-error", {
+      page: window.location.pathname,
+      src: event.target.currentSrc || event.target.getAttribute("src") || ""
+    });
+    return;
+  }
+
+  __siteDebugReport("C", "[DEBUG] runtime-error", {
+    page: window.location.pathname,
+    message: event.message || "Unknown runtime error",
+    source: event.filename || "",
+    line: event.lineno || 0,
+    column: event.colno || 0
+  });
+}, true);
+
+window.addEventListener("unhandledrejection", (event) => {
+  __siteDebugReport("C", "[DEBUG] unhandled-rejection", {
+    page: window.location.pathname,
+    reason: String(event.reason || "")
+  });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  __siteDebugReport("B", "[DEBUG] shared-page-boot", {
+    page: window.location.pathname,
+    hasFooter: Boolean(document.querySelector(".site-footer")),
+    hasMobileMenu: Boolean(document.querySelector("#mobile_menu")),
+    navLinkCount: document.querySelectorAll("#nav_links a").length,
+    imageCount: document.images.length
+  });
+});
+// #endregion
+
 function initSiteFooter() {
   if (!document.body || document.querySelector(".site-footer")) {
     return;
@@ -29,6 +90,7 @@ function initSiteFooter() {
                 <li><a href="pillars.html">Core Pillars</a></li>
                 <li><a href="products.html">Products</a></li>
                 <li><a href="infrastructure.html">Infrastructure</a></li>
+                <li><a href="social-responsibility.html">Social Responsibility</a></li>
                 <li><a href="contact.html">Contact</a></li>
               </ul>
             </article>
@@ -191,7 +253,7 @@ function initHomeAnimations() {
         scale: 0.2,
       })
 
-      t1.from("#nav_top>button", {
+      t1.from("#nav_top .nav_actions", {
         xPrecent:200,
       })
 

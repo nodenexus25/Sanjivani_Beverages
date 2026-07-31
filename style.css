@@ -60,10 +60,6 @@ body.home-page #main::-webkit-scrollbar {
     z-index: 1001;
 }
 
-#nav_top>i {
-    font-size: 2.5vw;
-    display: none;
-}
 /* Nav Left Css */
 
 #nav_left {
@@ -578,12 +574,31 @@ body.home-page #main::-webkit-scrollbar {
     gap: 1.5rem;
 }
 
+.nav_brand {
+    min-width: 0;
+}
+
 .brand-mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.9rem;
     font-family: 'Anton', sans-serif;
     font-size: clamp(1.15rem, 2vw, 1.6rem);
     text-transform: uppercase;
     letter-spacing: 0.08em;
+    line-height: 1;
     white-space: nowrap;
+}
+
+.brand-mark-symbol {
+    width: clamp(2.65rem, 3.5vw, 3.8rem);
+    height: clamp(2.65rem, 3.5vw, 3.8rem);
+    object-fit: contain;
+    flex: 0 0 auto;
+}
+
+.brand-mark-text {
+    display: inline-block;
 }
 
 #nav_links {
@@ -630,14 +645,14 @@ body.home-page #main::-webkit-scrollbar {
     white-space: nowrap;
 }
 
-.nav-logo-link {
+.nav_logo {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: 3.75rem;
+    height: 4.9rem;
 }
 
-.nav-logo-link img {
+.nav_logo img {
     height: 100%;
     width: auto;
     object-fit: contain;
@@ -719,7 +734,7 @@ body.menu-open {
 }
 
 .inner-page #nav_top {
-    position: sticky;
+    position: relative;
     top: 0;
     width: 100%;
     left: 0;
@@ -905,6 +920,15 @@ body.menu-open {
     grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
     align-items: stretch;
     overflow: hidden;
+}
+
+.leadership-card--featured {
+    grid-column: 1 / -1;
+    grid-template-columns: minmax(280px, 0.95fr) minmax(0, 1.35fr);
+}
+
+.leadership-card--standard {
+    grid-template-columns: minmax(0, 35fr) minmax(0, 65fr);
 }
 
 .leadership-copy {
@@ -2674,6 +2698,100 @@ html.js-enabled [data-reveal].is-visible {
     color: rgba(16, 16, 16, 0.76);
 }
 
+/* Social Responsibility Page */
+
+.social-responsibility-page {
+    background:
+        radial-gradient(circle at top left, rgba(var(--brand-accent-rgb), 0.1), transparent 24%),
+        radial-gradient(circle at right 14% top 10%, rgba(88, 141, 101, 0.12), transparent 24%),
+        linear-gradient(180deg, #f8fbf6 0%, #ffffff 22%, #fbfaf6 100%);
+    overflow-x: clip;
+}
+
+.social-responsibility-page .content-page {
+    position: relative;
+}
+
+.social-responsibility-page .page-hero {
+    gap: 4rem;
+}
+
+.social-responsibility-page .page-hero-copy h1 {
+    margin-bottom: 0.75rem;
+    font-size: clamp(3.4rem, 6vw, 5.8rem);
+    line-height: 0.96;
+    max-width: 10ch;
+}
+
+.social-responsibility-page .page-hero-copy h3 {
+    max-width: 18ch;
+    margin-bottom: 1rem;
+    font-family: 'Dosis', sans-serif;
+    font-size: clamp(1.2rem, 2vw, 1.75rem);
+    font-weight: 600;
+    line-height: 1.45;
+    letter-spacing: 0.04em;
+    text-transform: none;
+    color: rgba(16, 16, 16, 0.78);
+}
+
+.social-responsibility-page .page-hero-media .hero-media-frame {
+    width: min(100%, 44rem);
+    padding: 1.15rem;
+}
+
+.social-responsibility-page .page-hero-media img {
+    width: min(100%, 44rem);
+    border-radius: 1.5rem;
+    object-fit: cover;
+    box-shadow: 0 24px 55px rgba(0, 0, 0, 0.12);
+}
+
+.impact-highlight-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.impact-highlight-card {
+    padding: 1.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 1.5rem;
+    background: rgba(255, 255, 255, 0.78);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.06);
+}
+
+.impact-highlight-card strong {
+    display: block;
+    margin-bottom: 0.65rem;
+    font-family: 'Anton', sans-serif;
+    font-size: 1.7rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.impact-highlight-card span {
+    display: block;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: rgba(16, 16, 16, 0.76);
+}
+
+.impact-list {
+    margin-top: 1rem;
+    padding-left: 1.2rem;
+    display: grid;
+    gap: 0.6rem;
+    color: rgba(16, 16, 16, 0.8);
+    line-height: 1.7;
+}
+
+.csr-stat-card strong[data-count-to] {
+    color: var(--brand-accent-text);
+}
+
 @keyframes bottleFloat {
     0%,
     100% {
@@ -2792,6 +2910,7 @@ html.js-enabled [data-reveal].is-visible {
 
     .footer-grid,
     .contact-highlight-grid,
+    .impact-highlight-grid,
     .contact-detail-grid,
     .contact-faq-grid,
     .form-grid {
@@ -2922,6 +3041,12 @@ html.js-enabled [data-reveal].is-visible {
         grid-template-columns: 1fr;
     }
 
+    .leadership-card--featured,
+    .leadership-card--standard {
+        grid-column: auto;
+        grid-template-columns: 1fr;
+    }
+
     .portrait-slot {
         border-right: 0;
         border-bottom: 1px solid rgba(0, 0, 0, 0.08);
@@ -2938,6 +3063,7 @@ html.js-enabled [data-reveal].is-visible {
     .infrastructure-gallery-grid,
     .packaging-grid,
     .footer-grid,
+    .impact-highlight-grid,
     .contact-highlight-grid,
     .contact-detail-grid,
     .contact-faq-grid,
@@ -2998,6 +3124,25 @@ html.js-enabled [data-reveal].is-visible {
         overflow: visible !important;
     }
 
+    .nav_brand,
+    .nav_actions {
+        gap: 0.8rem;
+    }
+
+    .brand-mark {
+        gap: 0.65rem;
+    }
+
+    .brand-mark-symbol {
+        width: 2.2rem;
+        height: 2.2rem;
+    }
+
+    .brand-mark-text {
+        font-size: clamp(0.92rem, 3.8vw, 1.05rem);
+        letter-spacing: 0.06em;
+    }
+
     #nav_links {
         display: none;
     }
@@ -3015,6 +3160,10 @@ html.js-enabled [data-reveal].is-visible {
 
     .nav_actions {
         gap: 0.75rem;
+    }
+
+    .nav_logo {
+        height: 3.7rem;
     }
 
     .ghost-button {
