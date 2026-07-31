@@ -6,8 +6,13 @@ const __siteDebugConfig = {
   runId: "post-fix",
   url: "http://127.0.0.1:7777/event"
 };
+const __siteDebugEnabled = /^(localhost|127\.0\.0\.1)$/i.test(window.location.hostname);
 
 function __siteDebugReport(hypothesisId, msg, data = {}) {
+  if (!__siteDebugEnabled) {
+    return;
+  }
+
   fetch(__siteDebugConfig.url, {
     method: "POST",
     headers: {

@@ -2447,12 +2447,17 @@
 
             // #region debug-point A-C:index-runtime-reporting
             const __siteDebugConfig = {
-                sessionId: "site-deployment-readiness",
-                runId: "post-fix",
+                sessionId: "vercel-index-breakage",
+                runId: "pre-fix",
                 url: "http://127.0.0.1:7777/event"
             };
+            const __siteDebugEnabled = /^(localhost|127\.0\.0\.1)$/i.test(window.location.hostname);
 
             function __siteDebugReport(hypothesisId, msg, data = {}) {
+                if (!__siteDebugEnabled) {
+                    return;
+                }
+
                 fetch(__siteDebugConfig.url, {
                     method: "POST",
                     headers: {
@@ -2501,9 +2506,25 @@
                     hasFooter: Boolean(document.querySelector(".site-footer")),
                     hasMobileMenu: Boolean(document.querySelector("#mobile_menu")),
                     navLinkCount: document.querySelectorAll("#nav_links a").length,
-                    imageCount: document.images.length
+                    imageCount: document.images.length,
+                    hasMain: Boolean(document.querySelector("#main")),
+                    hasBottle: Boolean(document.querySelector("#bottle")),
+                    hasHeroStatic: Boolean(document.querySelector("#hero_static_mobile")),
+                    hasAgeGate: Boolean(document.querySelector("#age_gate")),
+                    hasGSAP: typeof window.gsap !== "undefined",
+                    hasScrollTrigger: typeof window.ScrollTrigger !== "undefined",
+                    hasLocomotiveScroll: typeof window.LocomotiveScroll !== "undefined"
                 });
             });
+
+            window.addEventListener("load", () => {
+                __siteDebugReport("B", "[DEBUG] index-window-load", {
+                    page: window.location.pathname,
+                    readyState: document.readyState,
+                    viewportWidth: window.innerWidth,
+                    viewportHeight: window.innerHeight
+                });
+            }, { once: true });
             // #endregion
 
             const mobileMenu = document.querySelector("#mobile_menu");
@@ -2524,6 +2545,7 @@
                     ageGate.setAttribute("hidden", "");
                     ageGate.setAttribute("aria-hidden", "true");
                     ageGate.classList.remove("is-exiting");
+                    window.dispatchEvent(new CustomEvent("agegate:closed"));
                 }, 420);
             };
 
@@ -2802,6 +2824,17 @@
 
             initPage4Carousel();
 
+            if (typeof window.gsap === "undefined" || typeof window.ScrollTrigger === "undefined") {
+                // #region debug-point D:animation-library-missing
+                __siteDebugReport("D", "[DEBUG] animation-library-missing", {
+                    hasGSAP: typeof window.gsap !== "undefined",
+                    hasScrollTrigger: typeof window.ScrollTrigger !== "undefined",
+                    hasLocomotiveScroll: typeof window.LocomotiveScroll !== "undefined"
+                });
+                // #endregion
+                return;
+            }
+
             gsap.registerPlugin(ScrollTrigger);
             ScrollTrigger.config({
                 limitCallbacks: true,
@@ -2835,6 +2868,25 @@
                 const page6Button = document.querySelector("#page6_part2>button");
                 const heroSeal = document.querySelector("#main .hero_seal");
                 const navLogo = document.querySelector("#nav_top .nav_logo");
+
+                // #region debug-point D:desktop-hero-entry
+                __siteDebugReport("D", "[DEBUG] desktop-hero-init-entry", {
+                    hasMain: Boolean(main),
+                    hasBottle: Boolean(bottle),
+                    hasNavBackdrop: Boolean(navBackdrop),
+                    hasNavShell: Boolean(navShell),
+                    hasPage1: Boolean(page1),
+                    hasHeroSeal: Boolean(heroSeal),
+                    hasPage5Heading: Boolean(page5Heading),
+                    hasPage2Button: Boolean(page2Button),
+                    hasPage6Button: Boolean(page6Button),
+                    hasGSAP: typeof window.gsap !== "undefined",
+                    hasScrollTrigger: typeof window.ScrollTrigger !== "undefined",
+                    hasLocomotiveScroll: typeof window.LocomotiveScroll !== "undefined",
+                    viewportWidth: window.innerWidth
+                });
+                // #endregion
+
                 if (!main) {
                     return () => {};
                 }
@@ -3003,6 +3055,12 @@
                     if (isDestroyed) {
                         return;
                     }
+                    // #region debug-point D:desktop-hero-refresh
+                    __siteDebugReport("D", "[DEBUG] desktop-hero-post-init-refresh", {
+                        isDestroyed,
+                        scrollTriggerCount: typeof ScrollTrigger.getAll === "function" ? ScrollTrigger.getAll().length : -1
+                    });
+                    // #endregion
                     locoScroll.update();
                     ScrollTrigger.refresh();
                 });
@@ -3020,6 +3078,13 @@
             };
 
             const initStaticHeroExperience = () => {
+                // #region debug-point D:static-hero-entry
+                __siteDebugReport("D", "[DEBUG] static-hero-init-entry", {
+                    viewportWidth: window.innerWidth,
+                    hasGSAP: typeof window.gsap !== "undefined",
+                    hasScrollTrigger: typeof window.ScrollTrigger !== "undefined"
+                });
+                // #endregion
                 let staticRefreshTimer = null;
 
                 const refreshStaticLayout = () => {
@@ -3071,7 +3136,30 @@
             let cleanupHeroMode = () => {};
 
             const syncHeroExperience = () => {
-                const nextMode = desktopHeroMediaQuery.matches ? "desktop" : "static";
+                if (document.documentElement.classList.contains("age-gate-active")) {
+                    // #region debug-point D:hero-deferred-by-age-gate
+                    __siteDebugReport("D", "[DEBUG] hero-init-deferred-by-age-gate", {
+                        viewportWidth: window.innerWidth,
+                        activeHeroMode
+                    });
+                    // #endregion
+                    return;
+                }
+
+                const requestedMode = desktopHeroMediaQuery.matches ? "desktop" : "static";
+                const nextMode = requestedMode === "desktop" && typeof window.LocomotiveScroll === "undefined"
+                    ? "static"
+                    : requestedMode;
+                // #region debug-point D:hero-mode-sync
+                __siteDebugReport("D", "[DEBUG] hero-mode-sync", {
+                    nextMode,
+                    requestedMode,
+                    activeHeroMode,
+                    viewportWidth: window.innerWidth,
+                    mediaQueryMatches: desktopHeroMediaQuery.matches,
+                    hasLocomotiveScroll: typeof window.LocomotiveScroll !== "undefined"
+                });
+                // #endregion
                 if (nextMode === activeHeroMode) {
                     return;
                 }
@@ -3086,6 +3174,13 @@
 
             // Breakpoint check added here: desktop bottle animation only mounts at >=1024px.
             syncHeroExperience();
+            window.addEventListener("agegate:closed", () => {
+                activeHeroMode = null;
+                cleanupHeroMode();
+                cleanupHeroMode = () => {};
+                syncHeroExperience();
+                debouncedRefresh();
+            });
             if (typeof desktopHeroMediaQuery.addEventListener === "function") {
                 desktopHeroMediaQuery.addEventListener("change", syncHeroExperience);
             } else if (typeof desktopHeroMediaQuery.addListener === "function") {
