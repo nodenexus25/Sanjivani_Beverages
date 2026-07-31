@@ -28,6 +28,7 @@
             --brand-accent-rgb: 216, 179, 108;
             --nav-height: 76px;
             --nav-bg: rgba(255, 255, 255, 0.86);
+            --desktop-bottle-nav-overlap: clamp(22px, 3.4vh, 38px);
         }
 
         html[data-page="index"] body {
@@ -37,11 +38,164 @@
             overflow-x: clip;
         }
 
+        html[data-page="index"].age-gate-active,
+        html[data-page="index"].age-gate-active body {
+            overflow: hidden;
+        }
+
+        html[data-page="index"] .age-gate {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(10, 10, 10, 0.5);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        html[data-page="index"].age-gate-active .age-gate {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        html[data-page="index"] .age-gate.is-exiting {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        html[data-page="index"] .age-gate[hidden] {
+            display: none !important;
+        }
+
+        html[data-page="index"] .age-gate__card {
+            width: min(100%, 600px);
+            padding: 50px 60px;
+            border-radius: 12px;
+            background: #FAF3EC;
+            color: #1f1b18;
+            text-align: center;
+            box-shadow: 0 32px 80px rgba(0, 0, 0, 0.28);
+        }
+
+        html[data-page="index"] .age-gate__brand {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        html[data-page="index"] .age-gate__badge {
+            width: 132px;
+            height: 132px;
+            border-radius: 999px;
+            background: #181511;
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        html[data-page="index"] .age-gate__badge svg {
+            width: 38px;
+            height: 38px;
+        }
+
+        html[data-page="index"] .age-gate__badge img {
+            width: 116px;
+            height: 116px;
+            object-fit: contain;
+            display: block;
+        }
+
+        html[data-page="index"] .age-gate__brand-name {
+            font-family: 'Anton', sans-serif;
+            font-size: clamp(1rem, 1.4vw, 1.15rem);
+            font-weight: 400;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #1c1a17;
+        }
+
+        html[data-page="index"] .age-gate__tagline {
+            font-family: 'Dosis', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            color: #6B6B6B;
+            text-transform: uppercase;
+        }
+
+        html[data-page="index"] .age-gate__title {
+            margin-top: 8px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: clamp(2.5rem, 4.5vw, 3rem);
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            color: #181511;
+        }
+
+        html[data-page="index"] .age-gate__description {
+            margin-top: 14px;
+            font-family: 'Dosis', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 500;
+            line-height: 1.7;
+            color: #6B6B6B;
+        }
+
+        html[data-page="index"] .age-gate__actions {
+            margin-top: 32px;
+            display: flex;
+            justify-content: center;
+        }
+
+        html[data-page="index"] .age-gate__button {
+            min-height: 56px;
+            padding: 16px 40px;
+            border: 1.5px solid #181511;
+            border-radius: 6px;
+            background: transparent;
+            color: #181511;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            transition: background-color 0.35s ease, color 0.35s ease, transform 0.35s ease;
+        }
+
+        html[data-page="index"] .age-gate__button:hover,
+        html[data-page="index"] .age-gate__button:focus-visible {
+            background: #181511;
+            color: #FAF3EC;
+            transform: translateY(-1px);
+            outline: none;
+        }
+
+        html[data-page="index"] .age-gate__footnote {
+            margin-top: 18px;
+            font-family: 'Dosis', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #7A726B;
+        }
+
         html[data-page="index"] #main {
             width: 100%;
             max-width: 100%;
             min-height: 100vh;
-            overflow-y: hidden !important;
+            overflow-y: visible;
             overflow-x: clip;
             position: relative;
             scroll-behavior: smooth;
@@ -291,9 +445,9 @@
             height: 95vh;
             max-width: 100%;
             object-fit: contain;
-            top: 0;
+            top: calc(var(--desktop-bottle-nav-overlap) * -1);
             left: 38%;
-            z-index: 15;
+            z-index: 30;
             pointer-events: none;
             border-image: 0 0 2vmax black;
             will-change: transform, opacity;
@@ -1332,7 +1486,7 @@
             }
 
             html[data-page="index"] #bottle {
-                top: 0;
+                top: calc(var(--desktop-bottle-nav-overlap) * -1);
                 height: 85vh;
                 left: 44%;
             }
@@ -1398,7 +1552,7 @@
             }
 
             html[data-page="index"] #bottle {
-                top: 0;
+                top: calc(var(--desktop-bottle-nav-overlap) * -1);
                 left: calc(50% - min(28vw, 320px) / 2);
                 width: min(28vw, 320px);
                 height: auto;
@@ -1915,6 +2069,40 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
+
+            html[data-page="index"] .age-gate {
+                padding: 20px;
+            }
+
+            html[data-page="index"] .age-gate__card {
+                width: min(90vw, 600px);
+                padding: 38px 24px;
+                border-radius: 10px;
+            }
+
+            html[data-page="index"] .age-gate__badge {
+                width: 112px;
+                height: 112px;
+            }
+
+            html[data-page="index"] .age-gate__badge img {
+                width: 96px;
+                height: 96px;
+            }
+
+            html[data-page="index"] .age-gate__title {
+                font-size: clamp(2.25rem, 9vw, 2.75rem);
+            }
+
+            html[data-page="index"] .age-gate__description {
+                font-size: 1rem;
+                line-height: 1.6;
+            }
+
+            html[data-page="index"] .age-gate__button {
+                width: 100%;
+                padding: 15px 24px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1953,6 +2141,40 @@
     </style>
 </head>
 <body>
+    <script>
+        (function () {
+            if (document.documentElement.dataset.page !== "index") return;
+
+            document.body.insertAdjacentHTML("afterbegin", `
+                <div id="age_gate" class="age-gate" role="dialog" aria-modal="true" aria-labelledby="age_gate_title" aria-describedby="age_gate_description">
+                    <div class="age-gate__card">
+                        <div class="age-gate__brand">
+                            <div class="age-gate__badge" aria-hidden="true">
+                                <img src="media/co/Sanjivani Spririts Symbol.png" alt="" decoding="async">
+                            </div>
+                            <p class="age-gate__brand-name">Sanjivani Spirits</p>
+                            <p class="age-gate__tagline">Enjoy Responsibly</p>
+                        </div>
+                        <h2 id="age_gate_title" class="age-gate__title">Verify Your Age</h2>
+                        <p id="age_gate_description" class="age-gate__description">You need to be an adult to view this website.</p>
+                        <div class="age-gate__actions">
+                            <button class="age-gate__button" type="button" data-age-confirm>Yes, I Am 18+</button>
+                        </div>
+                        <p class="age-gate__footnote">By continuing, you confirm that you are of legal drinking age in your region.</p>
+                    </div>
+                </div>
+            `);
+
+            const ageGate = document.querySelector("#age_gate");
+            if (!ageGate) {
+                return;
+            }
+
+            document.documentElement.classList.add("age-gate-active");
+            ageGate.removeAttribute("hidden");
+            ageGate.setAttribute("aria-hidden", "false");
+        })();
+    </script>
 
     <div id="nav_backdrop" aria-hidden="true"></div>
     <nav id="nav_top">
@@ -2288,6 +2510,35 @@
             const mobileMenu = document.querySelector("#mobile_menu");
             const menuToggles = document.querySelectorAll("[data-menu-toggle]");
             const menuCloseButtons = document.querySelectorAll("[data-menu-close]");
+            const ageGate = document.querySelector("#age_gate");
+            const ageConfirmButton = document.querySelector("[data-age-confirm]");
+
+            const dismissAgeGate = () => {
+                if (!ageGate) {
+                    return;
+                }
+
+                ageGate.classList.add("is-exiting");
+                document.documentElement.classList.remove("age-gate-active");
+
+                window.setTimeout(() => {
+                    ageGate.setAttribute("hidden", "");
+                    ageGate.setAttribute("aria-hidden", "true");
+                    ageGate.classList.remove("is-exiting");
+                }, 420);
+            };
+
+            if (ageGate && ageConfirmButton) {
+                ageConfirmButton.addEventListener("click", () => {
+                    dismissAgeGate();
+                });
+
+                if (!ageGate.hasAttribute("hidden")) {
+                    window.requestAnimationFrame(() => {
+                        ageConfirmButton.focus({ preventScroll: true });
+                    });
+                }
+            }
 
             function setMenuState(isOpen) {
                 if (!mobileMenu) {
@@ -2589,6 +2840,15 @@
                     return () => {};
                 }
 
+                const previousMainOverflow = main.style.overflow;
+                const previousMainOverflowX = main.style.overflowX;
+                const previousMainOverflowY = main.style.overflowY;
+
+                // Let the bottle rise into the navbar band on desktop.
+                main.style.overflow = "visible";
+                main.style.overflowX = "clip";
+                main.style.overflowY = "visible";
+
                 // Restore the original desktop hero state before mounting the bottle animation.
                 [navBackdrop, navShell, bottle, page1, heroSeal, navLogo].forEach((element) => {
                     if (!element) {
@@ -2766,6 +3026,9 @@
                     ScrollTrigger.removeEventListener("refresh", syncLoco);
                     locoScroll.destroy();
                     main.style.transform = "";
+                    main.style.overflow = previousMainOverflow;
+                    main.style.overflowX = previousMainOverflowX;
+                    main.style.overflowY = previousMainOverflowY;
                 };
             };
 
