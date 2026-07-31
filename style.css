@@ -649,7 +649,7 @@ body.home-page #main::-webkit-scrollbar {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: 6.6rem;
+    height: 4.3rem;
 }
 
 .nav_logo img {
@@ -3222,7 +3222,7 @@ html.js-enabled [data-reveal].is-visible {
     }
 
     .nav_logo {
-        height: 5rem;
+        height: 3.25rem;
     }
 
     .ghost-button {
