@@ -28,7 +28,6 @@
             --brand-accent-rgb: 216, 179, 108;
             --nav-height: 76px;
             --nav-bg: rgba(255, 255, 255, 0.86);
-            --desktop-bottle-nav-overlap: clamp(22px, 3.4vh, 38px);
         }
 
         html[data-page="index"] body {
@@ -195,7 +194,7 @@
             width: 100%;
             max-width: 100%;
             min-height: 100vh;
-            overflow-y: visible;
+            overflow-y: hidden !important;
             overflow-x: clip;
             position: relative;
             scroll-behavior: smooth;
@@ -445,9 +444,9 @@
             height: 95vh;
             max-width: 100%;
             object-fit: contain;
-            top: calc(var(--desktop-bottle-nav-overlap) * -1);
+            top: 0;
             left: 38%;
-            z-index: 30;
+            z-index: 15;
             pointer-events: none;
             border-image: 0 0 2vmax black;
             will-change: transform, opacity;
@@ -1486,7 +1485,7 @@
             }
 
             html[data-page="index"] #bottle {
-                top: calc(var(--desktop-bottle-nav-overlap) * -1);
+                top: 0;
                 height: 85vh;
                 left: 44%;
             }
@@ -1552,7 +1551,7 @@
             }
 
             html[data-page="index"] #bottle {
-                top: calc(var(--desktop-bottle-nav-overlap) * -1);
+                top: 0;
                 left: calc(50% - min(28vw, 320px) / 2);
                 width: min(28vw, 320px);
                 height: auto;
@@ -2840,15 +2839,6 @@
                     return () => {};
                 }
 
-                const previousMainOverflow = main.style.overflow;
-                const previousMainOverflowX = main.style.overflowX;
-                const previousMainOverflowY = main.style.overflowY;
-
-                // Let the bottle rise into the navbar band on desktop.
-                main.style.overflow = "visible";
-                main.style.overflowX = "clip";
-                main.style.overflowY = "visible";
-
                 // Restore the original desktop hero state before mounting the bottle animation.
                 [navBackdrop, navShell, bottle, page1, heroSeal, navLogo].forEach((element) => {
                     if (!element) {
@@ -3026,9 +3016,6 @@
                     ScrollTrigger.removeEventListener("refresh", syncLoco);
                     locoScroll.destroy();
                     main.style.transform = "";
-                    main.style.overflow = previousMainOverflow;
-                    main.style.overflowX = previousMainOverflowX;
-                    main.style.overflowY = previousMainOverflowY;
                 };
             };
 
